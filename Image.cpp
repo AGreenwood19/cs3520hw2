@@ -26,15 +26,32 @@ using namespace std;
 // }
 
 Image::Image(){
-
+    m_width = 0;
+    m_height = 0;
 }
 
 Image::Image(int width, int height){
-
+    m_width = width;
+    m_height = height;
+    for(int i=0;i<m_height;i++){
+        for(int j=0;j<m_width;j++){
+            m_red_channel.at(i,j) = 0;
+            m_green_channel.at(i,j) = 0;
+            m_blue_channel.at(i,j) = 0;
+        }
+    }
 }
 
 Image::Image(int width, int height, const Pixel& fill){
-
+    m_width = width;
+    m_height = height;
+    for(int i=0;i<m_height;i++){
+        for(int j=0;j<m_width;j++){
+            m_red_channel.at(i,j) = fill.r;
+            m_green_channel.at(i,j) = fill.g;
+            m_blue_channel.at(i,j) = fill.b;
+        }
+    }
 }
 
 Image Image::read_ppm(std::istream& is){
@@ -71,7 +88,7 @@ void Image::print(std::ostream& os) const{
    os<<"P3"<<endl<<m_width<<" "<<m_height<<endl<<"255"<<endl;
    for(int i=0;i<m_height;i++){
     for(int j=0;j<m_height;j++){
-        os<<m_red_channel<<m_green_channel<<m_blue_channel;
+        os<<m_red_channel.at(i,j)<<m_green_channel.at(i,j)<<m_blue_channel.at(i,j);
     }
     os<<endl;
    }
@@ -86,15 +103,16 @@ int Image::get_height() const {
 }
 
 Pixel Image::get_pixel(int row, int column) const{
-    int red;
-    int green;
-    int blue;
+    Pixel p;
 
-    Pixel p ={red, green,blue};
-
+    p.r = m_red_channel.at(row,column);
+    p.g = m_green_channel.at(row,column);
+    p.b = m_blue_channel.at(row,column);
     return p;
 }
 
 void Image::set_pixel(int row, int column, const Pixel& color){
-
+    m_red_channel.at(row,column) = color.r;
+    m_green_channel.at(row,column) = color.g;
+    m_blue_channel.at(row,column) = color.b;
 }
